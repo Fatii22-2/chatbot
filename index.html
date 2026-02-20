@@ -2,17 +2,75 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot Marketing DUT</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Design simple pour que ça marche direct */
+        body { font-family: sans-serif; display: flex; justify-content: center; background-color: #f4f4f4; padding: 20px; }
+        .chat-container { width: 100%; max-width: 400px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 20px; }
+        #chat-window { height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .input-group { display: flex; gap: 5px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .msg-vous { color: blue; margin-bottom: 8px; align-self: flex-end; text-align: right; }
+        .msg-bot { color: green; margin-bottom: 8px; align-self: flex-start; }
+    </style>
 </head>
 <body>
+
     <div class="chat-container">
-        <div id="chat-window"></div>
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="Posez votre question sur le marketing...">
-            <button id="send-btn" onclick="sendMessage()">Envoyer</button>
+        <h3>Assistant Marketing</h3>
+        <div id="chat-window">
+            <div class="msg-bot"><b>Chatbot:</b> Bonjour ! Posez-moi une question sur les ventes, le CA ou la publicité.</div>
+        </div>
+        <div class="input-group">
+            <input type="text" id="user-input" placeholder="Ecrivez ici...">
+            <button id="btn-envoyer">Envoyer</button>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        // On définit les fonctions ici pour être sûr qu'elles sont chargées
+        document.addEventListener("DOMContentLoaded", function() {
+            const input = document.getElementById('user-input');
+            const btn = document.getElementById('btn-envoyer');
+            const chatWindow = document.getElementById('chat-window');
+
+            async function sendMessage() {
+                const text = input.value.trim();
+                if (!text) return;
+
+                // Afficher message utilisateur
+                chatWindow.innerHTML += `<div class="msg-vous"><b>Vous:</b> ${text}</div>`;
+                input.value = '';
+
+                // Afficher chargement
+                const loading = document.createElement('div');
+                loading.className = 'msg-bot';
+                loading.innerHTML = '<b>Chatbot:</b> Réflexion...';
+                chatWindow.appendChild(loading);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                try {
+                    // API Brainshop (Libre et variée)
+                    const response = await fetch(`https://api.brainshop.ai/get?bid=18191&key=vS7L6E2o8T7m7L7Q&uid=user123&msg=${encodeURIComponent(text)}`);
+                    const data = await response.json();
+                    
+                    loading.innerHTML = `<b>Chatbot:</b> ${data.cnt}`;
+                } catch (e) {
+                    loading.innerHTML = `<b>Chatbot:</b> Erreur de connexion. Réessayez.`;
+                }
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+
+            // Click sur bouton
+            btn.onclick = sendMessage;
+
+            // Touche Entrée
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') sendMessage();
+            };
+        });
+    </script>
 </body>
 </html>
