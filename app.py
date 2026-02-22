@@ -1,13 +1,13 @@
 import streamlit as st
 import google.generativeai as genai
 
+# 1. Configuration
 st.set_page_config(page_title="Maghribi AI", page_icon="🤖")
 
-# Jib l-key
+# 2. Get Key safely
 if "GEMINI_API_KEY" in st.secrets:
-    api_key = st.secrets["GEMINI_API_KEY"]
-    genai.configure(api_key=api_key)
-    # HNA L-BEDDIL: Khdem b gemini-1.5-flash-8b (khfif w kheddam 100%)
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+    # Flash 8b huwa l-aktar stability
     model = genai.GenerativeModel('gemini-1.5-flash-8b')
 else:
     st.error("Zid l-API key f Secrets!")
@@ -26,9 +26,8 @@ if prompt := st.chat_input("Kteb chi haja..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    
+
     try:
-        # Kan-jerrbo l-jawab
         response = model.generate_content(prompt)
         with st.chat_message("assistant"):
             st.markdown(response.text)
