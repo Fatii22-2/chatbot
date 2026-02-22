@@ -8,7 +8,7 @@ api_key = st.secrets["GEMINI_API_KEY"]
 # 2. Hna fin ghadi t-hat dak l-code (Configuration)
 if api_key:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+model = genai.GenerativeModel('gemini-1.5-flash')
 else:
     st.error("L-API Key ma-khdamach f les Secrets!")
 
