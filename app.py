@@ -1,19 +1,21 @@
 import streamlit as st
 import google.generativeai as genai
-import os
 
-# 1. Kan-jibo l-key mn l-secrets
-api_key = st.secrets["GEMINI_API_KEY"]
+# Configuration dyal l-page
+st.set_page_config(page_title="Maghribi AI", page_icon="🤖")
 
-# 2. Hna fin ghadi t-hat dak l-code (Configuration)
-if api_key:
+# Jib l-key mn l-secrets
+if "GEMINI_API_KEY" in st.secrets:
+    api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-model = genai.GenerativeModel('models/gemini-1.5-flash')
+    # Khdem b had smiya deqt bach may-tla3ch error 404
+    model = genai.GenerativeModel('gemini-1.5-flash')
 else:
-    st.error("L-API Key ma-khdamach f les Secrets!")
+    st.error("L-API Key khassha t-zad f Secrets!")
+    st.stop()
 
-# --- Baqi l-code dyal l-interface ---
 st.title("🤖 Chatbot dyali")
+st.caption("Chatbot khedam b Gemini API")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
