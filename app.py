@@ -7,9 +7,7 @@ st.set_page_config(page_title="Maghribi AI", page_icon="🤖")
 # 2. Get Key safely
 if "GEMINI_API_KEY" in st.secrets:
 import google.generativeai as genai
-
 genai.configure(api_key=API_KEY)
-
 model = genai.GenerativeModel("gemini-1.5-flash")
 else:
     st.error("Zid l-API key f Secrets!")
